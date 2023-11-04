@@ -1,5 +1,6 @@
 # THIS CODE CONNECTS TO API THINGSBOARD (GET DATA FROM API OPENWEATHER), COLLECT DATA AND BRING IT TO POSTGRESQL DATABASE
-
+# Tip: use Bing to generate code, as we have api detail
+# Must do: change the frequency of data to  hours, as temperature doesn't change so much in seconds.
 
 import requests
 import json
