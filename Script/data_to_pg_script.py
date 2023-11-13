@@ -10,14 +10,14 @@ import pandas as pd
 import time
 import datetime
 
-# CONST VALUE
-# acount
+# INFORMATION
+# account
 USERNAME = "tenant@thingsboard.org"
 PASSWORD = "tenant"
-# range between start_ts and end_ts
-TIME_RANGE = 900
 # schedule time to send data hour:minute
 SCHEDULE_MINUTE = 15
+# range between start_ts and end_ts
+TIME_RANGE = SCHEDULE_MINUTE*60
 # end of timeseries
 END_TS = int(time.time())*1000
 # start of timeseries
