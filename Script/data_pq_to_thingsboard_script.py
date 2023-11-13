@@ -3,6 +3,7 @@ import requests
 import psycopg2
 import pandas as pd
 import time
+import datetime
 
 
 # asset id
@@ -13,6 +14,7 @@ USER = "postgres"
 PASSWORD = "postgres"
 HOST = "localhost"
 PORT = "5432"
+SCHEDULE_MINUTE = 15
 
 
 # calculate timeseries -> date time
@@ -166,17 +168,22 @@ if __name__ == "__main__":
     )
     # asset id of asset we send data to
     asset_id = ASSET_ID
-    # access token
-    auth_token = get_access_token()
+    while True:
+        now = "NOW: " + str(str(datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')))
+        minute_left = "DATA WILL BE POSTED IN: " + str(15 - datetime.datetime.now().minute%SCHEDULE_MINUTE) + " minutes"
+        print(now + " || " + minute_left, end="\r", flush=True)
+        if (datetime.datetime.now().minute%SCHEDULE_MINUTE == 1):
+            # access token
+            auth_token = get_access_token()
 
-    data_avg_temp = get_avg_temp(conn)
+            data_avg_temp = get_avg_temp(conn)
 
-    data_avg_temp_night = get_avg_temp_night(conn)
+            data_avg_temp_night = get_avg_temp_night(conn)
 
-    data_avg_temp_day = get_avg_temp_day(conn)
-
-    post_data_to_api(data_avg_temp, asset_id=asset_id, auth_token=auth_token)
-    post_data_to_api(data_avg_temp_night, asset_id=asset_id, auth_token=auth_token)
-    post_data_to_api(data_avg_temp_day, asset_id=asset_id, auth_token=auth_token)
-
-    conn.close()
+            data_avg_temp_day = get_avg_temp_day(conn)
+            post_data_to_api(data_avg_temp, asset_id=asset_id, auth_token=auth_token)
+            post_data_to_api(data_avg_temp_night, asset_id=asset_id, auth_token=auth_token)
+            post_data_to_api(data_avg_temp_day, asset_id=asset_id, auth_token=auth_token)
+            conn.close()
+            time.sleep(60)
+   
