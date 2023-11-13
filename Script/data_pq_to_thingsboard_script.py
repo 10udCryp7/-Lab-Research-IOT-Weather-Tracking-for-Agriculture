@@ -5,7 +5,9 @@ import pandas as pd
 import time
 import datetime
 
-
+# acount
+USERNAME = "tenant@thingsboard.org"
+PASSWORD = "tenant"
 # id
 ENTITY_ID = "99643c50-7731-11ee-b094-a797de75d9ec"
 # entity type
@@ -50,8 +52,8 @@ def get_access_token():
     # url of api login
     url_login = "http://localhost:8080/api/auth/login"
     # data account
-    data_login = {'username': 'tenant@thingsboard.org',
-                  'password': 'tenant', }
+    data_login = {'username': USERNAME,
+                  'password': PASSWORD, }
     # header of login api
     headers_login = {
         'accept': 'application/json',

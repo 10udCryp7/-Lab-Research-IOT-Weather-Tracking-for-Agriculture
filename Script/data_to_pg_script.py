@@ -11,10 +11,13 @@ import time
 import datetime
 
 # CONST VALUE
+# acount
+USERNAME = "tenant@thingsboard.org"
+PASSWORD = "tenant"
 # range between start_ts and end_ts
 TIME_RANGE = 900
 # schedule time to send data hour:minute
-SCHEDULE_MINUTE = 23
+SCHEDULE_MINUTE = 15
 # end of timeseries
 END_TS = int(time.time())*1000
 # start of timeseries
@@ -48,8 +51,8 @@ def get_access_token():
     # url of api login
     url_login = "http://localhost:8080/api/auth/login"
     # data account
-    data_login = {'username': 'tenant@thingsboard.org',
-                  'password': 'tenant', }
+    data_login = {'username': USERNAME,
+                  'password': PASSWORD, }
     # header of login api
     headers_login = {
         'accept': 'application/json',
