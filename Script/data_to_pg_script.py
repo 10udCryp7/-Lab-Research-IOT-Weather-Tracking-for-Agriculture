@@ -7,13 +7,16 @@ import requests
 import json
 import psycopg2
 import pandas as pd
+import time
 
 
 # CONST VALUE
+# range between start_ts and end_ts
+TIME_RANGE = 3600
 # start of timeseries
-START_TS = 0
+START_TS = (int(time.time()) - TIME_RANGE)*1000
 # end of timeseries
-END_TS = 2099315200000
+END_TS = int(time.time())*1000
 # asset id
 ASSET_ID = "99643c50-7731-11ee-b094-a797de75d9ec"
 # DATABASE

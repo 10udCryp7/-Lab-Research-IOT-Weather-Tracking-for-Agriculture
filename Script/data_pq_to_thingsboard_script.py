@@ -2,6 +2,7 @@ import json
 import requests
 import psycopg2
 import pandas as pd
+import time
 
 
 # asset id
