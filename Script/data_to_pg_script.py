@@ -100,7 +100,9 @@ def send_data_to_database(data, database, user, password, host, port):
     outsideTempArr = data['outsideTemp']
 
     for i in range(len(data['outsideHumidity'])):
-        cur.execute('INSERT INTO "weatherData"("dateTime","outsideHumidity", "outsideMaxTemp", "outsideMinTemp", "outsideTemp") VALUES (%s,%s,%s,%s,%s)',
+        cur.execute("""
+                    INSERT INTO "weatherData"("dateTime","outsideHumidity", "outsideMaxTemp", "outsideMinTemp", "outsideTemp") VALUES (%s,%s,%s,%s,%s);
+                    """,
                     (calculate_date_time(outsideHumidityArr[i]['ts']), outsideHumidityArr[i]['value'], outsideMaxTempArr[i]['value'], outsideMinTempArr[i]['value'], outsideTempArr[i]['value']))
     # Commit the changes and close the connection
     conn.commit()
