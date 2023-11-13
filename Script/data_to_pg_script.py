@@ -9,19 +9,20 @@ import psycopg2
 import pandas as pd
 import time
 import datetime
-import sys
 
 # CONST VALUE
 # range between start_ts and end_ts
 TIME_RANGE = 900
 # schedule time to send data hour:minute
-SCHEDULE_MINUTE = 15
+SCHEDULE_MINUTE = 23
 # end of timeseries
 END_TS = int(time.time())*1000
 # start of timeseries
 START_TS = int(END_TS/1000 - TIME_RANGE)*1000
-# asset id
-ASSET_ID = "99643c50-7731-11ee-b094-a797de75d9ec"
+# entity id
+ENTITY_ID = "99643c50-7731-11ee-b094-a797de75d9ec"
+# type
+TYPE = "ASSET"
 # DATABASE
 DATABASE = "weather"
 USER = "postgres"
@@ -68,10 +69,10 @@ def get_access_token():
 # get data from api
 
 
-def get_data(start_ts, end_ts, asset_id, token):
+def get_data(start_ts, end_ts, entity_id, type, token):
     # API
-    url_get_data = "http://localhost:8080/api/plugins/telemetry/ASSET/" + \
-        asset_id + "/values/timeseries"
+    url_get_data = "http://localhost:8080/api/plugins/telemetry/"+type+"/" + \
+        entity_id + "/values/timeseries"
     querystring = {"keys": "outsideHumidity,outsideMaxTemp,outsideMinTemp,outsideTemp",
                    "startTs": start_ts, "endTs": end_ts}
 
@@ -127,7 +128,10 @@ if __name__ == "__main__":
     # end of timeseries
     end_ts = END_TS
     # asset id
-    asset_id = ASSET_ID
+    entity_id = ENTITY_ID
+
+    # entity type
+    type = TYPE
     # DATABASE
     database = DATABASE
     user = USER
@@ -137,7 +141,7 @@ if __name__ == "__main__":
 
     while True:
         now = "NOW: " + str(str(datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')))
-        minute_left = "DATA WILL BE GOT IN: " + str(14 - datetime.datetime.now().minute%SCHEDULE_MINUTE) + " minutes"
+        minute_left = "DATA WILL BE GOT IN: " + str(SCHEDULE_MINUTE - 1 - datetime.datetime.now().minute%SCHEDULE_MINUTE) + " minutes"
         print(now + " || " + minute_left, end="\r", flush=True)
         if (datetime.datetime.now().minute%SCHEDULE_MINUTE == 0):
             print("SEND DATA AT: " + str(datetime.datetime.utcnow()))
@@ -145,7 +149,7 @@ if __name__ == "__main__":
             token = get_access_token()
             # get data
             data = get_data(start_ts=start_ts, end_ts=end_ts,
-                            asset_id=asset_id, token=token)
+                            entity_id=entity_id, type=type, token=token)
             # send data to database
             send_data_to_database(data=data, database=database,
                                 user=user, password=password, host=host, port=port)
