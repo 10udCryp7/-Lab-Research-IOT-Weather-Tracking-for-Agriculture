@@ -6,16 +6,16 @@ import time
 import datetime
 
 # acount
-USERNAME = "tenant@thingsboard.org"
-PASSWORD = "tenant"
+USERNAME_ACCOUNT = 'tenant@thingsboard.org'
+PASSWORD_ACCOUNT = 'tenant'
 # id
 ENTITY_ID = "99643c50-7731-11ee-b094-a797de75d9ec"
 # entity type
 TYPE = "ASSET"
 # DATABASE
 DATABASE = "weather"
-USER = "postgres"
-PASSWORD = "postgres"
+USERNAME_DB = "postgres"
+PASSWORD_DB = "postgres"
 HOST = "localhost"
 PORT = "5432"
 SCHEDULE_MINUTE = 15
@@ -30,7 +30,7 @@ def calculateTimeseries(dateTime):
 # post data to thingsboard by thingsboard api
 
 
-def post_data_to_api(data, type, entity_id, auth_token):
+def post_data_to_thingsboard(data, type, entity_id, auth_token):
 
     headers = {
         "accept": "application/json",
@@ -52,8 +52,8 @@ def get_access_token():
     # url of api login
     url_login = "http://localhost:8080/api/auth/login"
     # data account
-    data_login = {'username': USERNAME,
-                  'password': PASSWORD, }
+    data_login = {'username': USERNAME_ACCOUNT,
+                  'password': PASSWORD_ACCOUNT, }
     # header of login api
     headers_login = {
         'accept': 'application/json',
@@ -68,6 +68,38 @@ def get_access_token():
     print(token)
     print("======================================================================================")
     return token
+
+# TEMPLATE FUNCTION
+
+# def function_name(conn):
+#     # Query the database to retrieve the data you want to post
+#     cur = conn.cursor()
+#     cur.execute(
+#         """
+#             Viết câu truy vấn ở đây!!
+#             Câu truy vấn nên có cột đầu tiên là dateTime
+#         """
+#     )
+
+#     data = []
+#     for row in cur:
+#         data.append(
+#             {
+#                 "ts": int(calculateTimeseries(pd.to_datetime(row[0]))),
+#                 "values": {
+#                     "telemetry_key_1": row[1]
+#                     "telemetry_key_2": row[2]
+#                     ...
+#                 },
+#             }
+#         )
+#     print("SEND ... :")
+#     print(data)
+#     print("======================================================================================")
+#     conn.commit()
+#     cur.close()
+#     return data
+
 
 # get avg temp from database
 
@@ -165,8 +197,8 @@ if __name__ == "__main__":
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(
         database=DATABASE,
-        user=USER,
-        password=PASSWORD,
+        user=USERNAME_DB,
+        password=PASSWORD_DB,
         host=HOST,
         port=PORT,
     )
@@ -175,12 +207,14 @@ if __name__ == "__main__":
     # entity type
     type = TYPE
 
+    get_access_token()
+
     while True:
         now = "NOW: " + \
             str(str(datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')))
         minute_left = "DATA WILL BE POSTED IN: " + \
             str((SCHEDULE_MINUTE - 1 - datetime.datetime.now().minute %
-                SCHEDULE_MINUTE)%15) + " minutes"
+                SCHEDULE_MINUTE) % 15) + " minutes"
         print(now + " || " + minute_left, end="\r", flush=True)
         if (datetime.datetime.now().minute % SCHEDULE_MINUTE == 1):
             # access token
@@ -192,15 +226,14 @@ if __name__ == "__main__":
 
             data_avg_temp_day = get_avg_temp_day(conn)
             if (len(data_avg_temp) != 0):
-                post_data_to_api(
+                post_data_to_thingsboard(
                     data_avg_temp, type=type, entity_id=entity_id, auth_token=auth_token)
 
             if (len(data_avg_temp_night) != 0):
-                post_data_to_api(data_avg_temp_night, type=type,
-                                 entity_id=entity_id, auth_token=auth_token)
+                post_data_to_thingsboard(data_avg_temp_night, type=type,
+                                         entity_id=entity_id, auth_token=auth_token)
 
             if (len(data_avg_temp_day) != 0):
-                post_data_to_api(data_avg_temp_day, type=type,
-                                 entity_id=entity_id, auth_token=auth_token)
-            conn.close()
+                post_data_to_thingsboard(data_avg_temp_day, type=type,
+                                         entity_id=entity_id, auth_token=auth_token)
             time.sleep(60)
