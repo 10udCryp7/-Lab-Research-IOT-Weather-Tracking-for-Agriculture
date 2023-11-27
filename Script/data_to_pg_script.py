@@ -15,7 +15,7 @@ import datetime
 USERNAME_ACCOUNT = "tenant@thingsboard.org"
 PASSWORD_ACCOUNT = "tenant"
 # schedule time to send data hour:minute
-SCHEDULE_MINUTE = 15
+SCHEDULE_MINUTE = 23
 # range between start_ts and end_ts
 TIME_RANGE = SCHEDULE_MINUTE*60
 # end of timeseries
@@ -154,6 +154,7 @@ if __name__ == "__main__":
             data = get_data(start_ts=start_ts, end_ts=end_ts,
                             entity_id=entity_id, type=type, token=token)
             # send data to database
-            send_data_to_database(data=data, database=database,
-                                  user=user, password=password, host=host, port=port)
+            if (len(data) != 0):
+                send_data_to_database(data=data, database=database,
+                                    user=user, password=password, host=host, port=port)
             time.sleep(60)

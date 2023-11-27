@@ -207,8 +207,6 @@ if __name__ == "__main__":
     # entity type
     type = TYPE
 
-    get_access_token()
-
     while True:
         now = "NOW: " + \
             str(str(datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')))
