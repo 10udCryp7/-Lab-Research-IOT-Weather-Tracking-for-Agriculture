@@ -13,11 +13,11 @@ import logging
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 tf.autograph.set_verbosity(0)
 
-x = np.zeros((701, 11))
-y = np.zeros((701, 1))
+x = np.zeros((601, 11))
+y = np.zeros((601, 1))
 
-x_test = np.zeros((68, 11))
-y_test = np.zeros((68, 1))
+x_test = np.zeros((168, 11))
+y_test = np.zeros((168, 1))
 scaler_train_x = MinMaxScaler()
 scaler_test_x = MinMaxScaler()
 scaler_train_y = MinMaxScaler()
@@ -31,19 +31,19 @@ with open('data.csv', 'r') as csv_file:
     # data_normalize = data[1:]
     count = 0
     for row in data[1:]:
-        if (count <= 700):
+        if (count <= 600):
             x[count] = [row[0], row[2], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[17]]
             y[count] = [row[3]]
         else:
-            x_test[count - 700] = [row[0], row[2], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[17]]
-            y_test[count - 700] = [row[3]]
+            x_test[count - 600] = [row[0], row[2], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[17]]
+            y_test[count - 600] = [row[3]]
         count += 1
     # scaler_train_x.fit_transform(x[0:])
     # scaler_train_y.fit_transform(y[0:])
     # scaler_test_x.fit_transform(x_test[0:])
     # scaler_test_y.fit_transform(y_test[0:])
-print(x)
-print(y)
+print(np.shape(x))
+print(np.shape(y))
 
 model = Sequential(
     [
@@ -62,12 +62,12 @@ model = Sequential(
 
 model.compile(
     loss=tf.keras.losses.MeanSquaredError(),
-    optimizer=tf.keras.optimizers.Adam(0.001),
+    optimizer=tf.keras.optimizers.Adam(learning_rate = 0.001),
 )
 
 model.fit(
     x,y,
-    epochs=1000,   
+    epochs=500,   
 )
 
 # print(x_test)
