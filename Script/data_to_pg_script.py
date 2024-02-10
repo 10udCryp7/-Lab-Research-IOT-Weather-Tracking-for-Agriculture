@@ -15,13 +15,14 @@ import datetime
 USERNAME_ACCOUNT = "tenant@thingsboard.org"
 PASSWORD_ACCOUNT = "tenant"
 # schedule time to send data hour:minute
-SCHEDULE_MINUTE = 23
+SCHEDULE_MINUTE = 1
 # range between start_ts and end_ts
 TIME_RANGE = SCHEDULE_MINUTE*60
 # end of timeseries
 END_TS = int(time.time())*1000
 # start of timeseries
-START_TS = int(END_TS/1000 - TIME_RANGE)*1000
+# START_TS = int(END_TS/1000 - TIME_RANGE)*1000
+START_TS = 0
 # entity id
 ENTITY_ID = "99643c50-7731-11ee-b094-a797de75d9ec"
 # type
