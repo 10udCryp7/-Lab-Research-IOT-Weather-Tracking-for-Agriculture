@@ -125,10 +125,10 @@ def send_data_to_database(data, database, user, password, host, port):
 
 
 if __name__ == "__main__":
-    # start of timeseries
-    start_ts = START_TS
-    # end of timeseries
-    end_ts = END_TS
+    # # start of timeseries
+    # start_ts = START_TS
+    # # end of timeseries
+    # end_ts = END_TS
     # asset id
     entity_id = ENTITY_ID
 
@@ -141,6 +141,8 @@ if __name__ == "__main__":
     host = HOST
     port = PORT
     while True:
+        end_ts = int(time.time())*1000
+        start_ts = int(end_ts/1000 - TIME_RANGE)*1000
         now = "NOW: " + \
             str(str(datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')))
         minute_left = "DATA WILL BE GOT IN: " + \
@@ -157,5 +159,5 @@ if __name__ == "__main__":
             # send data to database
             if (len(data) != 0):
                 send_data_to_database(data=data, database=database,
-                                    user=user, password=password, host=host, port=port)
+                                      user=user, password=password, host=host, port=port)
             time.sleep(60)
