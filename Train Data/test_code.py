@@ -1,5 +1,5 @@
-import numpy as np
-x = slice(0,10)
-print(x)
+import tensorflow as tf
 
-print(np.arange(0,100)[0:10])
+inputs = tf.random.normal([32, 10, 8])
+
+print(inputs)
